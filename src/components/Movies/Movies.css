@@ -1,0 +1,36 @@
+.all-movies {
+  margin: 0;
+  padding: 70px 70px 89px;
+  background-color: #fafafa;
+}
+
+.all-movies__container {
+  margin: 0;
+  padding: 61px 0 0;
+  display: flex;
+  justify-content: center;
+}
+
+.all-movies__button {
+  margin: 0;
+  padding: 0;
+  width: 320px;
+  height: 36px;
+  border: 0;
+  background-color: #f4f4f4;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 1.2;
+}
+
+.all-movies__button:hover {
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+.all-movies__button_disabled {
+  cursor: not-allowed;
+  pointer-events: none;
+  opacity: 0.8;
+}

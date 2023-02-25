@@ -1,0 +1,71 @@
+.register {
+  margin: 0;
+  padding: 70px 442px;
+}
+  
+.register__container {
+  display: flex;
+  flex-direction: column;
+}
+  
+.register__welcoming-line {
+  margin: 40px 0;
+  padding: 0;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 1.2;
+}
+
+.form_register {
+  position: relative;
+}
+  
+.form__button {
+  padding: 0;
+  width: 100%;
+  height: 45px;
+  border-radius: 3px;
+  font-style: inherit;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 1.2;
+  border: 0;
+}
+  
+.form__button:hover {
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+.form__button_disabled {
+  background-color: #f8f8f8;
+  color: #c2c2c2;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+  
+.register__caption {
+  margin: 0;
+  padding: 0;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.2;
+  color: #a0a0a0;
+  text-align: center;
+}
+  
+.register__link {
+  margin: 0;
+  padding: 0;
+  text-decoration: none;
+  color: #3456f3;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.2;
+}
+  
+.register__link:hover {
+  cursor: pointer;
+  opacity: 0.7;
+}
+  

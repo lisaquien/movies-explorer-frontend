@@ -1,0 +1,13 @@
+.header__logo {
+  margin: 0;
+  padding: 0;
+  width: 38px;
+  height: 38px;
+  border: 0;
+  background: transparent url(../../images/logo.svg) center no-repeat;
+}
+
+.header__logo:hover {
+  transform: scale(1.1);
+  cursor: pointer;
+}

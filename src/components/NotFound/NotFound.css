@@ -1,0 +1,41 @@
+.not-found {
+  margin: 0;
+  padding: 246px 440px 60px;
+}
+  
+.not-found__container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+  
+.not-found__code {
+  margin: 0;
+  padding: 0;
+  font-weight: 400;
+  font-size: 140px;
+  line-height: 1.2;
+}
+  
+.not-found__message {
+  margin: 5px 0 184px;
+  padding: 0;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.2;
+}
+  
+.not-found__link {
+  margin: 0;
+  padding: 0;
+  text-decoration: none;
+  color: #3456f3;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.2;
+}
+  
+.not-found__link:hover {
+  cursor: pointer;
+  opacity: 0.7;
+}

@@ -1,0 +1,35 @@
+.tumbler {
+  margin: 0;
+  padding: 29px 0 48px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.tumbler__label {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.tumbler__input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(0 0 0 0);
+}
+
+.tumbler__pseudo-input {
+  margin: 0 12px 0 0;
+  padding: 0;
+  display: inline-block;
+  width: 36px;
+  height: 20px;
+  background-image: url(../../images/tumb-off.svg);
+}
+.tumbler__input:checked + .tumbler__pseudo-input_checked {
+  background-image: url(../../images/tumb-on.svg);
+}

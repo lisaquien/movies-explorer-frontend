@@ -1,0 +1,55 @@
+.promo {
+  margin: 0;
+  padding: 75px 70px;
+  background-color: #dddee3;
+  position: relative;
+}
+  
+.promo__heading {
+  margin: 0;
+  padding: 0;
+  max-width: 640px;
+  font-size: 50px;
+  line-height: 1.2;
+  font-weight: 400;
+}
+  
+.promo__subheading {
+  margin-top: 36px;
+  margin-bottom: 146px;
+  padding: 0;
+  max-width: 310px;
+  font-size: 16px;
+  line-height: 1.2;
+  font-weight: 400;
+  opacity: 0.5;
+}
+  
+.promo__logo {
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  top: 75px;
+  right: 70px;
+}
+  
+.promo__button {
+  margin: 0;
+  padding: 0;
+  width: 129px;
+  height: 36px;
+  background-color: transparent;
+  border-radius: 3px;
+  border: 1px solid #000000;
+  text-align: center;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 1.2;
+  color: #000000;
+}
+  
+.promo__button:hover {
+  cursor: pointer;
+  opacity: 0.8;
+  border: 1px solid rgba(0, 0, 0, .8);
+}

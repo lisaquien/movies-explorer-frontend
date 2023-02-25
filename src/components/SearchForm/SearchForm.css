@@ -1,0 +1,32 @@
+.search-form {
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+
+.search-form__button {
+  position: absolute;
+  bottom: 15px;
+  margin: 0;
+  padding: 0;
+  width: 34px;
+  height: 34px;
+  border-radius: 48px;
+  border: none;
+}
+
+.search-form__button:hover{
+  cursor: pointer;
+  opacity: 0.8;
+  transform: scale(1.1);
+}
+
+.search-form__button_color_grey {
+  left: 0;
+  background: transparent url(../../images/mglass-white.svg) center no-repeat;
+}
+
+.search-form__button_color_blue {
+  right: 0;
+  background: transparent url(../../images/mglass-blue.svg) center no-repeat;
+}
