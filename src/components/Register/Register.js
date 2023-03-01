@@ -28,8 +28,10 @@ function Register() {
   return(
     <div className="register">
       <div className="register__container">
-        <Logo />
-        <p className="register__welcoming-line">Добро пожаловать!</p>
+        <div className="register__header">
+          <Logo />
+          <p className="register__welcoming-line">Добро пожаловать!</p>
+        </div>
         <form className="form form_register">
           <FormInput
             componentName="register"

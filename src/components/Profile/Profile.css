@@ -1,6 +1,6 @@
 .profile {
   margin: 0;
-  padding: 74px 435px 70px;
+  padding: 74px calc((100vw - 410px) / 2) 70px;
 }
   
 .profile__container {
@@ -74,4 +74,68 @@
   padding: 0;
   display: flex;
   justify-content: space-between;
+}
+
+@media (max-width: 768px) {
+  .profile {
+    padding-top: calc(100vh - (74px + 445px + 269px));
+    padding-bottom: calc(100vh - (74px + 445px + 236px));
+  }
+
+  .profile__greeting {
+    margin-bottom: 96px;
+  }
+  .profile__links {
+    margin-top: 210px;
+  }
+  .profile__link {
+    margin-bottom: 16px; 
+  }
+}
+
+@media (max-width: 470px) {
+  .profile {
+    padding-left: 30px;
+    padding-right: 30px;
+  }
+}
+
+@media (max-width: 320px) {
+  .profile__link {
+    font-size: 12px;
+  }
+}
+
+@media (max-height: 858px) {
+  .profile {
+    padding-top: 70px;
+  }
+}
+
+@media (height: 700px) {
+  .profile {
+    padding-top: 74px;
+  }
+}
+
+@media (max-width: 768px) {
+  .profile__greeting {
+    margin-bottom: 80px;
+  };
+}
+
+@media (max-height: 795px) {
+  .profile {
+    padding-bottom: 40px;
+  }
+
+  .profile__greeting {
+    margin-bottom: 80px;
+  }
+}
+
+@media (max-height: 610px) {
+  .profile__links {
+    margin-top: calc(100vh - 390px);
+  }
 }

@@ -47,7 +47,7 @@
 }
 
 .techs__items {
-  margin: 0 295px 0;
+  margin: 0 auto;
   padding: 0;
   list-style: none;
   display: flex;
@@ -62,11 +62,73 @@
   font-size: 14px;
   line-height: 1.2;
   letter-spacing: -0.04em;
-  min-width: 90px;
+  width: 90px;
   height: 60px;
   background-color: #e8e8e8;
   border-radius: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+@media (max-width: 970px) {
+  .techs {
+    padding: 90px 60px;
+  }
+
+  .techs__subheading {
+    margin-top: 104px;
+  }
+  
+  .techs__caption {
+    font-size: 12px;
+    margin: 22px auto 83px;
+    padding: 0;
+  }
+
+  .techs__item {
+    width: 84px;
+    height: 57px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 640px) {
+  .techs {
+    padding: 70px 18px;
+  }
+
+  .techs__subheading {
+    margin-top: 89px;
+    font-size: 40px;
+  }
+
+  .techs__caption {
+    margin: 24px auto 50px;
+  }
+
+  .techs__items {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 457px) {
+  .techs__heading {
+    font-size: 18px;
+  }
+
+  .techs__subheading {
+    font-size: 30px;
+  }
+
+  .techs__caption {
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 402px) {
+  .techs__items {
+    justify-content: flex-start;
+    max-width: 178px;
+  }
 }

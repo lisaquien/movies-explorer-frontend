@@ -9,10 +9,10 @@ function Promo() {
   
   return(
     <section className="promo">
+      <img className="promo__logo" src={logoPromo} alt="Лого лендинга" />
       <h1 className="promo__heading">Учебный проект студента факультета Веб-разработки.</h1>
       <p className="promo__subheading">Листайте ниже, чтобы узнать больше про этот проект и его создателя.</p>
       <button className="promo__button" type="button" aria-label="Кнопка Узнать больше" onClick={toAboutProject}>Узнать больше</button>
-      <img className="promo__logo" src={logoPromo} alt="Лого лендинга" />
     </section>
   );
 }

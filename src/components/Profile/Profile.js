@@ -2,9 +2,12 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './Profile.css';
 import FormInput from '../FormInput/FormInput';
+import FormButton from '../FormButton/FormButton';
 
 function Profile(props) {
-const { user } = props;
+  const { user } = props;
+
+  const [inputsEnabled, setInputsEnabled] = useState(false);
 
   // Стейт-переменные для инпутов Имя, Имейл, Пароль
   const [name, setName] = useState('');
@@ -16,6 +19,10 @@ const { user } = props;
   }
   function handleEmailInput(e) {
     setEmail(e.target.value);
+  }
+
+  function toggleInputs() {
+    setInputsEnabled(!inputsEnabled);
   }
 
   return(
@@ -36,6 +43,7 @@ const { user } = props;
                 value={name || ""}
                 minLength="2"
                 maxLength="30"
+                inputsEnabled={inputsEnabled}
               />       
             </div>
             <div className="profile__email">
@@ -48,13 +56,18 @@ const { user } = props;
                 placeholder={user.email}
                 onChange={handleEmailInput}
                 value={email || ""}
+                inputsEnabled={inputsEnabled}
               /> 
             </div>
+            <div className="profile__links">
+              {inputsEnabled ? <FormButton componentName="profile" buttonText="Сохранить" onClick={toggleInputs} /> :
+                <>
+                  <Link to="" className="profile__link" onClick={toggleInputs}>Редактировать</Link>
+                  <Link to="" className="profile__link">Выйти из аккаунта</Link>
+                </>
+              }
+            </div>
           </form>  
-        </div>
-        <div className="profile__links">
-          <Link to="" className="profile__link">Редактировать</Link>
-          <Link to="" className="profile__link">Выйти из аккаунта</Link>
         </div>
       </div>
     </div>

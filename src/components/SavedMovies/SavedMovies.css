@@ -3,3 +3,15 @@
   padding: 70px 70px 140px;
   background-color: #fafafa;
 }
+
+@media (max-width: 970px) {
+  .saved-movies {
+    padding: 86px 30px 140px;
+  }
+}
+
+@media (max-width: 640px) {
+  .saved-movies {
+    padding: 98px 14px 140px;
+  }
+}

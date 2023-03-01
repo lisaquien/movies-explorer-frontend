@@ -1,12 +1,12 @@
 import './FormInput.css';
 
 function Input(props) {
-  const { componentName, labelText, name, type, id, placeholder, onChange, value, minLength, maxLength, required } = props;
+  const { inputsEnabled, componentName, labelText, name, type, id, placeholder, onChange, value, minLength, maxLength, required } = props;
 
   return(
     <>
       <label htmlFor={id} className={`form__label form__label_type_${componentName}`}>{labelText}</label>
-      <input className={`form__input form__input_type_${componentName}`}
+      <input className={`form__input form__input_type_${componentName} ${!inputsEnabled && "form__input_disabled"}`}
         name={name}
         type={type}
         id={id}

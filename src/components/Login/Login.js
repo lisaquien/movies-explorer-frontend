@@ -24,8 +24,10 @@ function Login() {
   return(
     <div className="login">
       <div className="login__container">
-        <Logo />
-        <p className="login__welcoming-line">Рады видеть!</p>
+        <div className="login__header">
+          <Logo />
+          <p className="login__welcoming-line">Рады видеть!</p>
+        </div>
         <form className="form form_login">
           <FormInput
             componentName="login"

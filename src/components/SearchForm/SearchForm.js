@@ -9,6 +9,7 @@ function SearchForm() {
         <form className="form form_search">
           <FormInput
             componentName="search"
+            id="search-input"
             type="search"
             name="search"
             placeholder="Фильм"

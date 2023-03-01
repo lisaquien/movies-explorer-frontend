@@ -34,3 +34,19 @@
   pointer-events: none;
   opacity: 0.8;
 }
+
+@media (max-width: 970px) {
+  .all-movies {
+    padding: 86px 30px 80px;
+  }
+}
+
+@media (max-width: 640px) {
+  .all-movies {
+    padding: 98px 14px 80px;
+  }
+
+  .all-movies__container {
+    padding-top: 50px;
+  }
+}
