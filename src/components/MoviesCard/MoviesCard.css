@@ -1,0 +1,89 @@
+.film-card {
+  margin: 0;
+  padding: 0;
+  box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.08);
+  max-height: 271px;
+  max-width: 364px;
+}
+  
+.film-card__header {
+  margin: 0;
+  padding: 14px;
+  background-color: #fff;
+  max-height: calc(68px - (14px * 2));
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+  
+.film-card__name {
+  margin: 0 0 9px;
+  padding: 0;
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 1.2;
+  max-width: 280px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+  
+.film-card__duration {
+  margin: 0;
+  padding: 0;
+  color: #a0a0a0;
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 1.2;
+  max-width: 280px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+  
+.film-card__button-container {
+  margin: 0;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  background-color: #f4f4f4;
+  border-radius: 36px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+  
+.film-card__button {
+  margin: 0;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 36px;
+}
+
+.film-card__button:hover {
+  cursor: pointer;
+  opacity: 0.8;
+  transform: scale(1.1);
+}
+
+.film-card__button_type_listed {
+  background: transparent url(../../images/icon-listed.svg) center no-repeat;
+}
+
+.film-card__button_type_saved {
+  background: transparent url(../../images/icon-saved.svg) center no-repeat;
+}
+  
+.film-card__button_type_delete {
+  background: transparent url(../../images/icon-delete.svg) center no-repeat;
+}
+  
+.film-card__image {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  max-height: 203px;
+  object-fit: contain;
+}

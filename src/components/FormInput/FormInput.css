@@ -1,0 +1,120 @@
+.form__label {
+  width: 100%;
+  display: block;
+  margin: 0;
+  padding: 0;
+  font-weight: 400;
+  font-size: 10px;
+  line-height: 1.2;
+  color: #a0a0a0;
+}
+
+.form__label_type_profile {
+  display: block;
+  color: #000;
+  font-weight: 500;
+  font-size: 11px;
+  line-height: 1.2;
+}
+
+.form__input {
+  margin: 0 0 24px;
+  padding: 5px 0 10px;
+  width: 100%;
+  border: 0;
+  border-bottom: 1px solid #e8e8e8;
+  background-color: transparent;
+  font-style: inherit;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.2;
+}
+  
+.form__input:focus {
+  outline: none;
+  border-bottom: 1px solid #3456f3;
+}
+  
+.form__input:last-of-type {
+  margin-bottom: 0;
+}
+
+.form__input_type_search::-webkit-search-decoration,
+.form__input_type_search::-webkit-search-cancel-button,
+.form__input_type_search::-webkit-search-results-button,
+.form__input_type_search::-webkit-search-results-decoration {
+  display: none;
+}
+
+.form__input_type_search {
+  text-align: center;
+  position: relative;
+  font-size: 28px;
+}
+  
+.form__input_type_search::placeholder {
+  margin: 0 0 15px;
+  padding: 0;
+  font-weight: 500;
+  font-size: 28px;
+  line-height: 1.2;
+  color: #a0a0a0;
+  text-align: center;
+}
+  
+.form__input_type_profile {
+  margin: 0;
+  padding: 0;
+  text-align: right;
+  color: #000;
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 1.2;
+  border: none;
+}
+  
+.form__input_type_profile:focus {
+  border: none;
+}
+
+.form__input_type_profile::placeholder {
+  color: #000;
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 1.2;
+}
+
+.form__input_type_error {
+  color: #ee3465;
+}
+
+.form__input-error {
+  margin: 0;
+  padding: 0;
+  color: #ee3465;
+  font-weight: 400;
+  font-size: 10px;
+  line-height: 1.2;
+  display: none;
+}
+
+.form__input-error_active {
+  display: block;
+  position: absolute;
+  top: 45px;
+  left: 0;
+  margin-top: 6px;
+}
+
+@media (max-width: 460px) {
+  .form__input_type_search {
+    padding-bottom: 15px;
+    text-align: start;
+    font-size: 18px;
+  }
+
+  .form__input_type_search::placeholder {
+    text-align: start;
+    font-size: 18px;
+  }
+}
