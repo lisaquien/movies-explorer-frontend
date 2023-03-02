@@ -10,8 +10,8 @@ import card5 from '../../images/cards/card5.png';
 function MoviesCardList() {
   let [ isLiked, setIsLiked ] = useState(false);
 
-  function likeCard() {
-    setIsLiked(true);
+  function toggleLikeCard() {
+    setIsLiked(!isLiked);
   }
 
   const cardsList = [
@@ -45,7 +45,7 @@ function MoviesCardList() {
   return(
     <ul className="film-cards">
       {cardsList.map((card, i) => {
-        return(<MoviesCard card={card} key={i} isLiked={isLiked} likeCard={likeCard} />)
+        return(<MoviesCard card={card} key={i} isLiked={isLiked} likeCard={toggleLikeCard} />)
       })
       }
     </ul>

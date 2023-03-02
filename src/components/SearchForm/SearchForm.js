@@ -13,9 +13,10 @@ function SearchForm() {
             type="search"
             name="search"
             placeholder="Фильм"
+            required="required"
           />
-          <button className="search-form__button search-form__button_color_grey" type="button" />
-          <button className="search-form__button search-form__button_color_blue" type="button" />
+          <button className="search-form__button search-form__button_color_grey" type="submit" />
+          <button className="search-form__button search-form__button_color_blue" type="submit" />
         </form>
       </div>
       < FilterCheckbox />

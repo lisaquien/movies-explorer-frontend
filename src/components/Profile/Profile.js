@@ -43,7 +43,7 @@ function Profile(props) {
                 value={name || ""}
                 minLength="2"
                 maxLength="30"
-                inputsEnabled={inputsEnabled}
+                disabled={!inputsEnabled && "disabled"}
               />       
             </div>
             <div className="profile__email">
@@ -56,10 +56,10 @@ function Profile(props) {
                 placeholder={user.email}
                 onChange={handleEmailInput}
                 value={email || ""}
-                inputsEnabled={inputsEnabled}
+                disabled={!inputsEnabled && "disabled"}
               /> 
             </div>
-            <div className="profile__links">
+            <div className="profile__ctrl-panel">
               {inputsEnabled ? <FormButton componentName="profile" buttonText="Сохранить" onClick={toggleInputs} /> :
                 <>
                   <Link to="" className="profile__link" onClick={toggleInputs}>Редактировать</Link>

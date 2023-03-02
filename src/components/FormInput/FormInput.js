@@ -1,12 +1,25 @@
 import './FormInput.css';
 
 function Input(props) {
-  const { inputsEnabled, componentName, labelText, name, type, id, placeholder, onChange, value, minLength, maxLength, required } = props;
+  const {
+    componentName,
+    labelText,
+    name,
+    type,
+    id,
+    placeholder,
+    onChange,
+    value,
+    minLength,
+    maxLength,
+    required,
+    disabled,
+  } = props;
 
   return(
     <>
       <label htmlFor={id} className={`form__label form__label_type_${componentName}`}>{labelText}</label>
-      <input className={`form__input form__input_type_${componentName} ${!inputsEnabled && "form__input_disabled"}`}
+      <input className={`form__input form__input_type_${componentName}`}
         name={name}
         type={type}
         id={id}
@@ -16,6 +29,7 @@ function Input(props) {
         minLength={minLength}
         maxLength={maxLength}
         required={required}
+        disabled={disabled}
       />
       <span className={`${id}-error form__input-error`}></span>
     </>

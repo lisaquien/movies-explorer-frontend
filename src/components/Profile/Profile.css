@@ -19,7 +19,7 @@
   line-height: 1.2;
 }
   
-.profile__links {
+.profile__ctrl-panel {
   margin: 220px 0 0;
   padding: 0;
   display: flex;
@@ -85,7 +85,7 @@
   .profile__greeting {
     margin-bottom: 96px;
   }
-  .profile__links {
+  .profile__ctrl-panel {
     margin-top: 210px;
   }
   .profile__link {
@@ -135,7 +135,7 @@
 }
 
 @media (max-height: 610px) {
-  .profile__links {
+  .profile__ctrl-panel {
     margin-top: calc(100vh - 390px);
   }
 }
