@@ -4,6 +4,7 @@
   box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.08);
   max-height: 271px;
   max-width: 364px;
+  overflow: hidden;
 }
   
 .film-card__header {
@@ -22,7 +23,7 @@
   font-weight: 500;
   font-size: 15px;
   line-height: 1.2;
-  max-width: 280px;
+  max-width: 240px;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
@@ -84,6 +85,5 @@
   margin: 0;
   padding: 0;
   width: 100%;
-  max-height: 203px;
-  object-fit: contain;
+  object-fit: cover;
 }

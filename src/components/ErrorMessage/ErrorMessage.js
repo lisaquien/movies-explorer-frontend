@@ -1,10 +1,8 @@
 import './ErrorMessage.css';
 
-function ErrorMessage() {
+function ErrorMessage({ errorMessage }) {
   return(
-    <div className="error-message">
-      <span className="error-message__text">Текст ошибки</span>
-    </div>
+    <span className="error-message__text">{errorMessage}</span>
   );
 }
 

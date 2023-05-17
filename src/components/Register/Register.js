@@ -1,28 +1,39 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './Register.css';
 import Logo from '../Logo/Logo';
 import FormInput from '../FormInput/FormInput';
-import ErrorMessage from '../ErrorMessage/ErrorMessage';
 import FormButton from '../FormButton/FormButton';
+import { mainApi } from '../../utils/MainApi';
+import useValidation from '../../hooks/useValidation';
 
 function Register() {
-  let isError = false;
 
-  // Стейт-переменные для инпутов Имя, Имейл, Пароль
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [hasError, setHasError] = useState(false);
+  const [hasErrorMessage, setHasErrorMessage] = useState('');
 
-  // Функции-обработчики ввода инпутов Имя, Имейл, Пароль
-  function handleNameInput(e) {
-    setName(e.target.value);
-  }
-  function handleEmailInput(e) {
-    setEmail(e.target.value);
-  }
-  function handlePasswordInput(e) {
-    setPassword(e.target.value);
+  const navigate = useNavigate();
+
+  const { values, errors, isFormValid, handleChange } = useValidation();
+
+  function handleRegFormSubmit(event) {
+    event.preventDefault();
+
+    const { name, email, password } = values;
+    mainApi.register({ name, email, password })
+      .then((res) => {
+        console.log(res);
+        navigate('/sign-in', {replace: true});
+      })
+      .catch((err) => {
+        console.log(`Ошибка: ${err}`);
+        setHasError(true);
+        if(Number(err) === 409) {
+          setHasErrorMessage('Пользователь с таким e-mail уже существует');
+        } else {
+          setHasErrorMessage(`При регистрации произошла ошибка`);
+        }
+      });
   }
 
   return(
@@ -32,18 +43,19 @@ function Register() {
           <Logo />
           <p className="register__welcoming-line">Добро пожаловать!</p>
         </div>
-        <form className="form form_register">
+        <form className="form form_register" noValidate onSubmit={handleRegFormSubmit}>
           <FormInput
             componentName="register"
             labelText="Имя"
             name="name"
             type="text"
             id="reg-name"
-            onChange={handleNameInput}
-            value={name || ""}
             minLength="2"
             maxLength="30"
             required="required"
+            value={ values.name || ''}
+            error={ errors.name || '' }
+            onChange={handleChange}
           />
           <FormInput
             componentName="register"
@@ -51,9 +63,10 @@ function Register() {
             name="email"
             type="email"
             id="reg-email"
-            onChange={handleEmailInput}
-            value={email || ""}
             required="required"
+            value={ values.email || ''}
+            error={ errors.email || '' }
+            onChange={handleChange}
           />
           <FormInput
             componentName="register"
@@ -61,12 +74,18 @@ function Register() {
             name="password"
             type="password"
             id="reg-password"
-            onChange={handlePasswordInput}
-            value={password || ""}
             required="required"
+            value={ values.password || ''}
+            error={ errors.password || '' }
+            onChange={handleChange}
             />
-          {isError && <ErrorMessage />}
-          <FormButton componentName="register" buttonText="Зарегистрироваться" />            
+          <FormButton
+            componentName="register"
+            buttonText="Зарегистрироваться"
+            isFormValid={isFormValid}
+            hasError={hasError}
+            hasErrorMessage={hasErrorMessage}
+          />            
         </form>
         <p className="register__caption">Уже зарегистрированы? <Link to="/sign-in" className="register__link">Войти</Link></p>
       </div>

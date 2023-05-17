@@ -3,15 +3,8 @@
   padding: 0;
   list-style: none;
   display: grid;
-  grid-template: repeat(auto-fill, 271px) / repeat(auto-fill, 364px);
+  grid-template: repeat(auto-fill, minmax(236px, 1fr)) / repeat(auto-fill, minmax(300px, 1fr));
   gap: 30px 24px;
-  justify-items: center;
-}
-
-@media (max-width: 1280px) {
-  .film-cards {
-    grid-template: repeat(auto-fill, minmax(236px, 1fr)) / repeat(auto-fill, minmax(300px, 1fr));
-  }
 }
 
 @media (max-width: 684px) {

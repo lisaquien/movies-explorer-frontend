@@ -52,26 +52,16 @@
 }
   
 .profile__name {
-  margin: 0 0 34px;
-  padding: 0;
+  margin: 0;
+  padding: 0 0 16px;
   display: flex;
   justify-content: space-between;
   position: relative;
 }
   
-.profile__name:after {
-  content: '';
-  width: 100%;
-  height: 1px;
-  background-color: #e8e8e8;
-  top: 29px;
-  left: 0;
-  position: absolute;
-}
-  
 .profile__email {
   margin: 0;
-  padding: 0;
+  padding: 16px 0 0;
   display: flex;
   justify-content: space-between;
 }

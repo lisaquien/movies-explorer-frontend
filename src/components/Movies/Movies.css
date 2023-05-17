@@ -4,6 +4,19 @@
   background-color: #fafafa;
 }
 
+.all-movies__message {
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  font-size: 14px;
+  line-height: 1.2;
+  color: #3456f3;
+}
+
+.all-movies__message-none {
+  display: block;
+}
+
 .all-movies__container {
   margin: 0;
   padding: 61px 0 0;

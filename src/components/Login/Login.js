@@ -1,24 +1,50 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './Login.css';
 import Logo from '../Logo/Logo';
 import FormInput from '../FormInput/FormInput';
-import ErrorMessage from '../ErrorMessage/ErrorMessage';
 import FormButton from '../FormButton/FormButton';
+import { mainApi } from '../../utils/MainApi';
+import useValidation from '../../hooks/useValidation';
 
-function Login() {
-  let isError = false;
+function Login({ handleLoginState, hasError, setHasError, errorMessage, setErrorMessage }) {
 
-   // Стейт-переменные для инпутов Имя, Имейл, Пароль
-   const [email, setEmail] = useState('');
-   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
-   // Функции-обработчики ввода инпутов Имя, Имейл, Пароль
-  function handleEmailInput(e) {
-    setEmail(e.target.value);
-  }
-  function handlePasswordInput(e) {
-    setPassword(e.target.value);
+  const { values, setValues, errors, isFormValid, handleChange } = useValidation();
+
+  function handleLoginFormSubmit(event) {
+    event.preventDefault();
+
+    if (!values.email || !values.password) {
+      return;
+    }
+
+    const { email, password } = values;
+    
+    mainApi.authorise({ email, password })
+      .then((res) => {
+        if(res.token) {
+          localStorage.setItem('token', res.token);
+          setValues({
+            email: '',
+            password: '',
+          });
+          handleLoginState();
+          navigate('/movies', {replace: true});
+        } else {
+          return;
+        };
+      })
+      .catch((err) => {
+        console.log(`Ошибка: ${err}`);
+        setHasError(true);
+        if(Number(err) === 409) {
+          setErrorMessage('Пользователь с таким e-mail уже существует');
+        } else {
+          setErrorMessage('При авторизации произошла ошибка');
+        }
+      });
   }
 
   return(
@@ -28,15 +54,16 @@ function Login() {
           <Logo />
           <p className="login__welcoming-line">Рады видеть!</p>
         </div>
-        <form className="form form_login">
+        <form className="form form_login" noValidate onSubmit={handleLoginFormSubmit}>
           <FormInput
             componentName="login"
             labelText="E-mail"
             name="email"
             type="email"
             id="log-email"
-            onChange={handleEmailInput}
-            value={email || ""}
+            onChange={handleChange}
+            value={values.email || ""}
+            error={errors.email || ""}
             required="required"
           />
           <FormInput
@@ -45,12 +72,18 @@ function Login() {
             name="password"
             type="password"
             id="log-password"
-            onChange={handlePasswordInput}
-            value={password || ""}
+            onChange={handleChange}
+            value={values.password || ""}
+            error={errors.password || ""}
             required="required"
             />
-          {isError && <ErrorMessage />}
-          <FormButton componentName="login" buttonText="Войти" />          
+          <FormButton
+            componentName="login"
+            buttonText="Войти"
+            isFormValid={isFormValid}
+            hasError={hasError}
+            errorMessage={errorMessage}
+          />          
         </form>
         <p className="login__caption">Еще не зарегистрированы? <Link to="/sign-up" className="login__link">Регистрация</Link></p>
       </div>

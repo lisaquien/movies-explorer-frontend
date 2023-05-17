@@ -1,6 +1,12 @@
-.form__button {
+.form-button__container {
+  margin: 0;
   padding: 0;
   width: 100%;
+  position: relative;
+}
+
+.form__button {
+  padding: 0;
   height: 45px;
   border-radius: 3px;
   font-style: inherit;
