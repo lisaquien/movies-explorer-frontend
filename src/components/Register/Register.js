@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Register.css';
 import Logo from '../Logo/Logo';
@@ -7,10 +7,8 @@ import FormButton from '../FormButton/FormButton';
 import { mainApi } from '../../utils/MainApi';
 import useValidation from '../../hooks/useValidation';
 
-function Register() {
-
-  const [hasError, setHasError] = useState(false);
-  const [hasErrorMessage, setHasErrorMessage] = useState('');
+function Register(props) {
+  const { hasError, setHasError, errorMessage, setErrorMessage } = props;
 
   const navigate = useNavigate();
 
@@ -18,20 +16,23 @@ function Register() {
 
   function handleRegFormSubmit(event) {
     event.preventDefault();
+    setHasError(false);
+    setErrorMessage('');
 
     const { name, email, password } = values;
     mainApi.register({ name, email, password })
       .then((res) => {
-        console.log(res);
         navigate('/sign-in', {replace: true});
       })
       .catch((err) => {
         console.log(`Ошибка: ${err}`);
         setHasError(true);
         if(Number(err) === 409) {
-          setHasErrorMessage('Пользователь с таким e-mail уже существует');
+          setErrorMessage('Пользователь с таким e-mail уже существует');
+        }  else if(Number(err) === 400) {
+          setErrorMessage('Данные вводятся некорректно');
         } else {
-          setHasErrorMessage(`При регистрации произошла ошибка`);
+          setErrorMessage(`При регистрации произошла ошибка`);
         }
       });
   }
@@ -84,7 +85,7 @@ function Register() {
             buttonText="Зарегистрироваться"
             isFormValid={isFormValid}
             hasError={hasError}
-            hasErrorMessage={hasErrorMessage}
+            errorMessage={errorMessage}
           />            
         </form>
         <p className="register__caption">Уже зарегистрированы? <Link to="/sign-in" className="register__link">Войти</Link></p>

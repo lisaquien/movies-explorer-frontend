@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Login.css';
 import Logo from '../Logo/Logo';
@@ -15,6 +15,8 @@ function Login({ handleLoginState, hasError, setHasError, errorMessage, setError
 
   function handleLoginFormSubmit(event) {
     event.preventDefault();
+    setHasError(false);
+    setErrorMessage('');
 
     if (!values.email || !values.password) {
       return;
@@ -39,8 +41,10 @@ function Login({ handleLoginState, hasError, setHasError, errorMessage, setError
       .catch((err) => {
         console.log(`Ошибка: ${err}`);
         setHasError(true);
-        if(Number(err) === 409) {
-          setErrorMessage('Пользователь с таким e-mail уже существует');
+        if(Number(err) === 401) {
+          setErrorMessage('Почта или пароль введены некорректно');
+        } else if(Number(err) === 400) {
+          setErrorMessage('Данные вводятся некорректно');
         } else {
           setErrorMessage('При авторизации произошла ошибка');
         }

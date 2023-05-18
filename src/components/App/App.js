@@ -70,9 +70,9 @@ function App() {
   };
 
   function handleLogOutState() {
-    localStorage.removeItem('searchInputValue');
-    localStorage.removeItem('isShortFilmsToggleOn');
-    localStorage.removeItem('searchFilteredFilms');
+    localStorage.removeItem('queryValue');
+    localStorage.removeItem('shortsToggleSwitch');
+    localStorage.removeItem('queryFilteredFilms');
     localStorage.removeItem('ownSavedMovies');
     localStorage.removeItem('token');
     setLoggedIn(false);
@@ -120,7 +120,13 @@ function App() {
               />} />
             </Route>
           </Route>
-          <Route path="/sign-up" element={!loggedIn ? <Register /> : <Navigate to="/movies" replace />} />
+          <Route path="/sign-up" element={!loggedIn
+            ? <Register
+              hasError={hasError}
+              setHasError={setHasError}
+              errorMessage={errorMessage}
+              setErrorMessage={setErrorMessage}
+            /> : <Navigate to="/movies" replace />} />
           <Route path="/sign-in" element={!loggedIn
             ? <Login
             handleLoginState={handleLoginState}
