@@ -22,17 +22,17 @@ function Register(props) {
     const { name, email, password } = values;
     mainApi.register({ name, email, password })
       .then((res) => {
-        navigate('/sign-in', {replace: true});
+        navigate('/movies', {replace: true});
       })
       .catch((err) => {
         console.log(`Ошибка: ${err}`);
         setHasError(true);
         if(Number(err) === 409) {
-          setErrorMessage('Пользователь с таким e-mail уже существует');
+          setErrorMessage('Пользователь с таким e-mail уже существует.');
         }  else if(Number(err) === 400) {
-          setErrorMessage('Данные вводятся некорректно');
+          setErrorMessage('Данные вводятся некорректно.');
         } else {
-          setErrorMessage(`При регистрации произошла ошибка`);
+          setErrorMessage('При регистрации произошла ошибка.');
         }
       });
   }

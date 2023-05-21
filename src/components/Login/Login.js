@@ -42,11 +42,11 @@ function Login({ handleLoginState, hasError, setHasError, errorMessage, setError
         console.log(`Ошибка: ${err}`);
         setHasError(true);
         if(Number(err) === 401) {
-          setErrorMessage('Почта или пароль введены некорректно');
+          setErrorMessage('Вы ввели неправильный логин или пароль.');
         } else if(Number(err) === 400) {
-          setErrorMessage('Данные вводятся некорректно');
+          setErrorMessage('Данные вводятся некорректно.');
         } else {
-          setErrorMessage('При авторизации произошла ошибка');
+          setErrorMessage('При авторизации произошла ошибка.');
         }
       });
   }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './Profile.css';
 import FormInput from '../FormInput/FormInput';
@@ -7,13 +7,11 @@ import { mainApi } from '../../utils/MainApi';
 import useValidation from '../../hooks/useValidation';
 
 function Profile(props) {
-  const { user, setCurrentUser, handleLogout } = props;
+  const { user, setCurrentUser, handleLogout, hasError, setHasError, errorMessage, setErrorMessage } = props;
 
   const { values, setValues, errors, isFormValid, handleChange } = useValidation();
 
   const [inputsEnabled, setInputsEnabled] = useState(false);
-  const [hasError, setHasError] = useState(false);
-  const [hasErrorMessage, setHasErrorMessage] = useState('');
 
   function toggleInputs() {
     setInputsEnabled(!inputsEnabled);
@@ -30,7 +28,11 @@ function Profile(props) {
       .catch(err => {
         console.log(`Error: ${err}`);
         setHasError(true);
-        setHasErrorMessage('При обновлении профиля произошла ошибка');
+        if(Number(err) === 409) {
+          setErrorMessage('Пользователь с таким email уже существует.')
+        } else {
+          setErrorMessage('При обновлении профиля произошла ошибка. Токен не передан или передан не в том формате.');
+        }
       });
   }
 
@@ -75,7 +77,7 @@ function Profile(props) {
                   buttonText="Сохранить"
                   isFormValid={isFormValid}
                   hasError={hasError}
-                  hasErrorMessage={hasErrorMessage}
+                  errorMessage={errorMessage}
                 />
               :
                 <>

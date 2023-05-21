@@ -5,6 +5,7 @@
   display: grid;
   grid-template: repeat(auto-fill, minmax(236px, 1fr)) / repeat(auto-fill, minmax(300px, 1fr));
   gap: 30px 24px;
+  justify-items: center;
 }
 
 @media (max-width: 684px) {

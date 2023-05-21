@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import './Movies.css';
 import SearchForm from '../SearchForm/SearchForm';
 import Preloader from '../Preloader/Preloader';
@@ -11,19 +11,21 @@ function Movies(props) {
   const windowWidth = document.documentElement.clientWidth;
 
   const [isLoading, setIsLoading] = useState(false);
+
   const [queryValue, setQueryValue] = useState(
     localStorage.getItem('queryValue') || ''
   );
-  const [allFilms, setAllFilms] = useState([]);
-  const [queryFilteredFilms, setQueryFilteredFilms] = useState(
-    JSON.parse(localStorage.getItem('queryFilteredFilms')) || []
+  const [renderedFilms, setRenderedFilms] = useState([]);
+  const [filteredFilms, setFilteredFilms] = useState(
+    JSON.parse(localStorage.getItem('filteredFilms')) || []
   );
   const [shortsToggleSwitch, setShortsToggleSwitch] = useState(
     JSON.parse(localStorage.getItem('shortsToggleSwitch')) || false
   );
+
   const [resultError, setResultError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const [filmsLoaded, setFilmsLoaded] = useState(false);
+
   const [filmsPerLoad, setFilmsPerLoad] = useState(0);
 
   function handleFilmsPerRowLoaded() {
@@ -56,10 +58,6 @@ function Movies(props) {
     };
   }, [windowWidth]);
 
-  useEffect(() => {    
-    localStorage.setItem('queryFilteredFilms', JSON.stringify(queryFilteredFilms));
-  }, [queryFilteredFilms]);
-
   function handleSearchFormInput(event) {
     setQueryValue(event.target.value);
   }
@@ -79,45 +77,58 @@ function Movies(props) {
     ));
   }
 
-  function handleSearch() {
+  useEffect(() => {
+    localStorage.setItem('filteredFilms', JSON.stringify(filteredFilms));
+  }, [filteredFilms]);
+
+  useEffect(() => {
+    localStorage.setItem('shortsToggleSwitch', shortsToggleSwitch);
+  }, [shortsToggleSwitch])
+
+  useEffect(() => {
+    const shortsToggleFilteredFilms = filterByDuration(filteredFilms);
+
+    shortsToggleSwitch ? setRenderedFilms(shortsToggleFilteredFilms) : setRenderedFilms(filteredFilms);
+  }, [shortsToggleSwitch, filteredFilms]);
+
+  const handleSearch = useCallback(() => {
     setResultError(false);
     setErrorMessage('');
-    setFilmsLoaded(false);
     setIsLoading(true);
 
+    if (!queryValue) {
+      setResultError(true);
+      setErrorMessage('Нужно ввести ключевое слово');
+      setIsLoading(false);
+      return;
+    }
+
     moviesApi.getAllBeatMovies()
-      .then(filmsArr => filmsArr.map(film => ({
-          country: film.country,
-          id: film.id,
-          nameRU: film.nameRU,
-          nameEN: film.nameEN,
-          duration: film.duration,
-          image: `https://api.nomoreparties.co${film.image.url}`,
-          thumbnail: `https://api.nomoreparties.co${film.image.formats.thumbnail.url}`,
-          director: film.director,
-          year: film.year,
-          description: film.description,
-          trailerLink: film.trailerLink,
-         })))
+      .then(res => res.map(item => ({
+          country: item.country,
+          description: item.description,
+          director: item.director,
+          duration: item.duration,
+          id: item.id,
+          image: `https://api.nomoreparties.co${item.image.url}`,
+          nameRU: item.nameRU,
+          nameEN: item.nameEN,
+          thumbnail: `https://api.nomoreparties.co${item.image.formats.thumbnail.url}`,
+          trailerLink: item.trailerLink,
+          year: item.year,
+      })))
       .then((res) => {
-        localStorage.setItem('shortsToggleSwitch', shortsToggleSwitch);
-        localStorage.setItem('queryValue', queryValue);
-
-        if (!queryValue) {
-          setResultError(true);
-          setErrorMessage('Нужно ввести ключевое слово');
-          return;
-        }
-
-        setFilmsLoaded(true);
-        shortsToggleSwitch ? setAllFilms(filterByDuration(res)) : setAllFilms(res);
-        setQueryFilteredFilms(filterByQuery(allFilms, queryValue));
+        const queryFilteredFilms = filterByQuery(res, queryValue);
 
         if(!queryFilteredFilms.length) {
           setResultError(true);
           setErrorMessage('Ничего не найдено');
           return;
         }
+
+        setFilteredFilms(queryFilteredFilms);
+
+        localStorage.setItem('queryValue', queryValue);
       })
       .catch((err) => {
         console.log(`Ошибка: ${err}.`)
@@ -125,7 +136,8 @@ function Movies(props) {
         setErrorMessage('Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз.');
       })
       .finally(setIsLoading(false));
-  }
+    
+  }, [queryValue]);
   
   return(
     <section className="all-movies">
@@ -139,18 +151,18 @@ function Movies(props) {
       { isLoading
         ? <Preloader />
         : ( resultError && <p className="all-movies__message">
-            <span className="all-movies__message-none">{errorMessage}</span>
-          </p> ) || ( (filmsLoaded || queryFilteredFilms.length) && <>
-                      <MoviesCardList
-                        cards={queryFilteredFilms.slice(0, filmsPerLoad)}
-                        handleFilmSave={handleFilmSave}
-                        savedMovies={savedMovies}
-                        handleFilmUnsave={handleFilmUnsave}
-                      />
-                      { !(filmsPerLoad >= queryFilteredFilms.length) && <div className="all-movies__container">
+        <span className="all-movies__message-none">{errorMessage}</span>
+      </p> ) || ( renderedFilms.length && <>
+                  <MoviesCardList
+                    cards={renderedFilms.slice(0, filmsPerLoad)}
+                    handleFilmSave={handleFilmSave}
+                    savedMovies={savedMovies}
+                    handleFilmUnsave={handleFilmUnsave}
+                  />
+                  { !(filmsPerLoad >= renderedFilms.length) && <div className="all-movies__container">
                         <button className="all-movies__button " type="button" onClick={handleLoadMoreButtonClick}>Еще</button>
                       </div> }
-                    </> ) || null
+                </> ) || null
       }
     </section>
   );

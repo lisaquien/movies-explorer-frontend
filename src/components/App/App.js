@@ -47,7 +47,7 @@ function App() {
         })
         .catch((err) => {
           setHasError(true);
-          setErrorMessage('При проверке токена авторизации произошла ошибка, попробйте авторизоваться снова');
+          setErrorMessage('При авторизации произошла ошибка. Переданный токен некорректен.');
           navigate('/sign-in');
           console.log(`Ошибка: ${err}`);
         });
@@ -57,6 +57,20 @@ function App() {
   useEffect(() => {
     if(loggedIn) {
       mainApi.getSavedMovies()
+        .then(res => res.map(item => ({
+          country: item.country,
+          description: item.description,
+          director: item.director,
+          duration: item.duration,
+          image: item.image,
+          movieId: item.movieId,
+          nameRU: item.nameRU,
+          nameEN: item.nameEN,
+          thumbnail: item.thumbnail,
+          trailerLink: item.trailerLink,
+          year: item.year,
+          _id: item._id,
+        })))
         .then(res => {
           setSavedMovies(res);
           localStorage.setItem("ownSavedMovies", JSON.stringify(res));
@@ -72,7 +86,7 @@ function App() {
   function handleLogOutState() {
     localStorage.removeItem('queryValue');
     localStorage.removeItem('shortsToggleSwitch');
-    localStorage.removeItem('queryFilteredFilms');
+    localStorage.removeItem('filteredFilms');
     localStorage.removeItem('ownSavedMovies');
     localStorage.removeItem('token');
     setLoggedIn(false);
@@ -117,6 +131,10 @@ function App() {
                 user={currentUser}
                 setCurrentUser={setCurrentUser}
                 handleLogout={handleLogOutState}
+                hasError={hasError}
+                setHasError={setHasError}
+                errorMessage={errorMessage}
+                setErrorMessage={setErrorMessage}
               />} />
             </Route>
           </Route>

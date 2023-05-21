@@ -76,7 +76,9 @@ function MoviesCard(props) {
           </button> }
         </div>
       </div>
-      <img className="film-card__image" src={card.image} alt="постер к фильму" />
+      <div className="film-card__image-container">
+        <img className="film-card__image" src={card.image} alt="постер к фильму" />
+      </div>
     </li>
   );
 }
