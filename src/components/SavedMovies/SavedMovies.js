@@ -2,19 +2,21 @@ import React, { useState, useEffect } from 'react';
 import './SavedMovies.css';
 import SearchForm from '../SearchForm/SearchForm';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
-import Preloader from '../Preloader/Preloader';
 
 function SavedMovies(props) {
-  const { savedMovies, handleFilmUnsave } = props;
+  const {savedMovies,
+    handleFilmSave,
+    handleFilmUnsave,
+    hasError,
+    setHasError,
+    errorMessage,
+    setErrorMessage,
+  } = props;
 
-  const [isLoading, setIsLoading] = useState(false);
   const [queryValue, setQueryValue] = useState('');
 
   const [savedFilmsFiltered, setSavedFilmsFiltered] = useState([]);
   const [shortsToggleSwitch, setShortsToggleSwitch] = useState(false);
-
-  const [resultError, setResultError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
 
   function handleSearchFormInput(event) {
     setQueryValue(event.target.value);
@@ -36,35 +38,37 @@ function SavedMovies(props) {
   }
 
   useEffect(() => {
-    shortsToggleSwitch ? setSavedFilmsFiltered(filterByDuration(savedMovies)) : setSavedFilmsFiltered(savedMovies);
-  }, [shortsToggleSwitch, savedMovies])
+    setHasError(false);
+    setErrorMessage('');
+    
+    const queryFilteredFilms = filterByQuery(savedMovies, queryValue);
+    const shortsToggleFilteredFilms = filterByDuration(queryFilteredFilms);
 
-  /*useEffect(() => {
-    const shortsToggleFilteredFilms = filterByDuration(queryFilteredSavedFilms);
-
-    shortsToggleSwitch ? setSavedFilmsFiltered(shortsToggleFilteredFilms) : setSavedFilmsFiltered(queryFilteredSavedFilms);
-  }, [shortsToggleSwitch, queryFilteredSavedFilms])*/
+    shortsToggleSwitch ? setSavedFilmsFiltered(shortsToggleFilteredFilms) : setSavedFilmsFiltered(queryFilteredFilms);
+  }, [shortsToggleSwitch, savedMovies, queryValue]);
 
   function handleSearch() {
-    setResultError(false);
+    setHasError(false);
     setErrorMessage('');
-    setIsLoading(true);
+
+    if (!queryValue) {
+      setHasError(true);
+      setErrorMessage('Нужно ввести ключевое слово');
+      return;
+    }
 
     const queryFilteredFilms = filterByQuery(savedMovies, queryValue);
 
     if(!queryFilteredFilms.length) {
-      setResultError(true);
+      setHasError(true);
       setErrorMessage('Ничего не найдено');
-      setIsLoading(false);
       return;
     }
 
-    shortsToggleSwitch
-      ? setSavedFilmsFiltered(filterByDuration(queryFilteredFilms))
-      : setSavedFilmsFiltered(queryFilteredFilms);
-  
-    setIsLoading(false);
-  }
+    const shortsToggleFilteredFilms = filterByDuration(queryFilteredFilms);
+
+    shortsToggleSwitch ? setSavedFilmsFiltered(shortsToggleFilteredFilms) : setSavedFilmsFiltered(queryFilteredFilms);
+  };
 
   return(
     <section className="all-movies">
@@ -75,14 +79,13 @@ function SavedMovies(props) {
         onToggleChange={handleShortsToggleSwitchState}
         onSubmit={handleSearch}
         />
-      { isLoading
-        ? <Preloader />
-        : ( resultError && <p className="all-movies__message">
+      { ( hasError && <p className="all-movies__message">
             <span className="all-movies__message-none">{errorMessage}</span>
           </p> ) || ( savedFilmsFiltered.length && <>
                       <MoviesCardList
                         cards={savedFilmsFiltered}
                         savedMovies={savedMovies}
+                        handleFilmSave={handleFilmSave}
                         handleFilmUnsave={handleFilmUnsave}
                       />
                     </> ) || null

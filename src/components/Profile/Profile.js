@@ -1,17 +1,32 @@
-import React, { useState, useEffect } from 'react';
+import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './Profile.css';
 import FormInput from '../FormInput/FormInput';
 import FormButton from '../FormButton/FormButton';
 import { mainApi } from '../../utils/MainApi';
 import useValidation from '../../hooks/useValidation';
+import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 
 function Profile(props) {
-  const { user, setCurrentUser, handleLogout, hasError, setHasError, errorMessage, setErrorMessage } = props;
+  const {
+    setCurrentUser,
+    handleLogout,
+    hasError,
+    setHasError,
+    errorMessage,
+    setErrorMessage,
+    requestExecuting,
+    setRequestExecuting,
+   } = props;
+
+   const currentUser = useContext(CurrentUserContext);
 
   const { values, setValues, errors, isFormValid, handleChange } = useValidation();
 
   const [inputsEnabled, setInputsEnabled] = useState(false);
+
+  const [updateSuccessful, setUpdateSuccessful] = useState(false);
+  const [messageSuccessful, setMessageSuccessful] = useState('');
 
   function toggleInputs() {
     setInputsEnabled(!inputsEnabled);
@@ -19,8 +34,11 @@ function Profile(props) {
 
   function onProfileUpdateFormSubmit(event) {
     event.preventDefault();
+    setRequestExecuting(true);
     mainApi.updateMyInfo(values)
       .then((res) => {
+        setUpdateSuccessful(true);
+        setMessageSuccessful('Профиль успешно обновлен');
         setValues(res);
         setCurrentUser(res);
         toggleInputs();
@@ -33,13 +51,14 @@ function Profile(props) {
         } else {
           setErrorMessage('При обновлении профиля произошла ошибка. Токен не передан или передан не в том формате.');
         }
-      });
+      })
+      .finally(() => setRequestExecuting(false));
   }
 
   return(
     <div className="profile">
       <div className="profile__container">
-        <p className="profile__greeting">Привет, {user.name}!</p>
+        <p className="profile__greeting">Привет, {currentUser.name}!</p>
         <div className="profile__info">
           <form className="form form_profile" noValidate onSubmit={onProfileUpdateFormSubmit}>
             <div className="profile__name">
@@ -50,7 +69,7 @@ function Profile(props) {
                 name="name"
                 id="profile-name"
                 onChange={handleChange}
-                value={values.name || user.name}
+                value={values.name || currentUser.name}
                 error={errors.name || ""}
                 minLength="2"
                 maxLength="30"
@@ -65,7 +84,7 @@ function Profile(props) {
                 name="email"
                 id="profile-email"
                 onChange={handleChange}
-                value={values.email || user.email}
+                value={values.email || currentUser.email}
                 error={errors.email || ""}
                 disabled={!inputsEnabled && "disabled"}
               /> 
@@ -74,13 +93,15 @@ function Profile(props) {
               {inputsEnabled
               ? <FormButton
                   componentName="profile"
-                  buttonText="Сохранить"
+                  buttonText={requestExecuting ? 'Сохранение...' : "Сохранить"}
                   isFormValid={isFormValid}
                   hasError={hasError}
                   errorMessage={errorMessage}
+                  requestExecuting={requestExecuting}
                 />
               :
                 <>
+                  {updateSuccessful && <span className="profile__link-message">{messageSuccessful}</span>}
                   <Link to="" className="profile__link" onClick={toggleInputs}>Редактировать</Link>
                   <Link to="" className="profile__link" onClick={handleLogout}>Выйти из аккаунта</Link>
                 </>

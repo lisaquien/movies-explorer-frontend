@@ -4,9 +4,25 @@ import SearchForm from '../SearchForm/SearchForm';
 import Preloader from '../Preloader/Preloader';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import { moviesApi } from '../../utils/MoviesApi';
+import {
+  THREE_CARD_W_WIDTH,
+  TWO_CARD_W_WIDTH,
+  CARDS_LOADED_MAX,
+  CARDS_LOADED_MEDIUM,
+  CARDS_LOADED_MIN,
+  CARDS_PER_LOAD_MAX,
+  CARDS_PER_LOAD_MIN,
+ } from '../../utils/constants';
 
 function Movies(props) {
-  const { handleFilmSave, savedMovies, handleFilmUnsave } = props;
+  const { handleFilmSave,
+    savedMovies,
+    handleFilmUnsave,
+    hasError,
+    setHasError,
+    errorMessage,
+    setErrorMessage,
+  } = props;
 
   const windowWidth = document.documentElement.clientWidth;
 
@@ -15,47 +31,52 @@ function Movies(props) {
   const [queryValue, setQueryValue] = useState(
     localStorage.getItem('queryValue') || ''
   );
-  const [renderedFilms, setRenderedFilms] = useState([]);
-  const [filteredFilms, setFilteredFilms] = useState(
-    JSON.parse(localStorage.getItem('filteredFilms')) || []
-  );
   const [shortsToggleSwitch, setShortsToggleSwitch] = useState(
     JSON.parse(localStorage.getItem('shortsToggleSwitch')) || false
   );
 
-  const [resultError, setResultError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
+  const [allFilms, setAllFilms] = useState(
+    JSON.parse(localStorage.getItem('allFilms')) || []);
+  const [renderedFilms, setRenderedFilms] = useState(
+    JSON.parse(localStorage.getItem('renderedFilms')) || []);
 
   const [filmsPerLoad, setFilmsPerLoad] = useState(0);
 
+  const [firstRequestSent, setFirstRequestSent] = useState(false);
+
   function handleFilmsPerRowLoaded() {
-    setTimeout(() => {
-      if(windowWidth >= 1088) {
-        setFilmsPerLoad(12);
-      } else if (windowWidth >= 684) {
-        setFilmsPerLoad(8);
-      } else {
-        setFilmsPerLoad(5);
-      };
-    }, 1000);
+    if(windowWidth >= THREE_CARD_W_WIDTH) {
+      setFilmsPerLoad(CARDS_LOADED_MAX);
+    } else if (windowWidth >= TWO_CARD_W_WIDTH) {
+      setFilmsPerLoad(CARDS_LOADED_MEDIUM);
+    } else {
+      setFilmsPerLoad(CARDS_LOADED_MIN);
+    };
   }
 
   function handleLoadMoreButtonClick() {
-    setTimeout(() => {
-      if(windowWidth >= 1088) {
-        setFilmsPerLoad(filmsPerLoad + 3);
-      } else {
-        setFilmsPerLoad(filmsPerLoad + 2);
-      };
-    }, 1000);
+    if(windowWidth >= THREE_CARD_W_WIDTH) {
+      setFilmsPerLoad(filmsPerLoad + CARDS_PER_LOAD_MAX);
+    } else {
+      setFilmsPerLoad(filmsPerLoad + CARDS_PER_LOAD_MIN);
+    };
   };
 
   useEffect(() => {
-    window.addEventListener('resize', handleFilmsPerRowLoaded(windowWidth));
+    handleFilmsPerRowLoaded();
+  }, [windowWidth])
+
+  useEffect(() => {
+    setTimeout(() => {
+      window.addEventListener('resize', function() {
+        handleFilmsPerRowLoaded();
+      });
+    }, 1000);
 
     return() => {
-      window.removeEventListener('resize', handleFilmsPerRowLoaded(windowWidth));
-    };
+      window.removeEventListener('resize', function() {
+        handleFilmsPerRowLoaded();
+      })};
   }, [windowWidth]);
 
   function handleSearchFormInput(event) {
@@ -78,26 +99,33 @@ function Movies(props) {
   }
 
   useEffect(() => {
-    localStorage.setItem('filteredFilms', JSON.stringify(filteredFilms));
-  }, [filteredFilms]);
+    localStorage.setItem('allFilms', JSON.stringify(allFilms));
+  }, [allFilms]);
+
+  useEffect(() => {
+    localStorage.setItem('renderedFilms', JSON.stringify(renderedFilms));
+  }, [renderedFilms]);
 
   useEffect(() => {
     localStorage.setItem('shortsToggleSwitch', shortsToggleSwitch);
   }, [shortsToggleSwitch])
 
   useEffect(() => {
-    const shortsToggleFilteredFilms = filterByDuration(filteredFilms);
+    const queryFilteredFilms = filterByQuery(allFilms, queryValue);
+    const shortsToggleFilteredFilms = filterByDuration(queryFilteredFilms);
 
-    shortsToggleSwitch ? setRenderedFilms(shortsToggleFilteredFilms) : setRenderedFilms(filteredFilms);
-  }, [shortsToggleSwitch, filteredFilms]);
+    shortsToggleSwitch ? setRenderedFilms(shortsToggleFilteredFilms) : setRenderedFilms(queryFilteredFilms);
+
+    localStorage.setItem('queryValue', queryValue);
+  }, [shortsToggleSwitch, allFilms, queryValue]);
 
   const handleSearch = useCallback(() => {
-    setResultError(false);
+    setHasError(false);
     setErrorMessage('');
     setIsLoading(true);
 
     if (!queryValue) {
-      setResultError(true);
+      setHasError(true);
       setErrorMessage('Нужно ввести ключевое слово');
       setIsLoading(false);
       return;
@@ -121,21 +149,24 @@ function Movies(props) {
         const queryFilteredFilms = filterByQuery(res, queryValue);
 
         if(!queryFilteredFilms.length) {
-          setResultError(true);
+          setFirstRequestSent(true);
+          setHasError(true);
           setErrorMessage('Ничего не найдено');
           return;
         }
 
-        setFilteredFilms(queryFilteredFilms);
+        const shortsToggleFilteredFilms = filterByDuration(queryFilteredFilms);
 
-        localStorage.setItem('queryValue', queryValue);
+        setAllFilms(res);
+
+        shortsToggleSwitch ? setRenderedFilms(shortsToggleFilteredFilms) : setRenderedFilms(queryFilteredFilms);
       })
       .catch((err) => {
         console.log(`Ошибка: ${err}.`)
-        setResultError(true);
+        setHasError(true);
         setErrorMessage('Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз.');
       })
-      .finally(setIsLoading(false));
+      .finally(() => setIsLoading(false));
     
   }, [queryValue]);
   
@@ -150,7 +181,7 @@ function Movies(props) {
         />
       { isLoading
         ? <Preloader />
-        : ( resultError && <p className="all-movies__message">
+        : ( (hasError && firstRequestSent) && <p className="all-movies__message">
         <span className="all-movies__message-none">{errorMessage}</span>
       </p> ) || ( renderedFilms.length && <>
                   <MoviesCardList

@@ -12,6 +12,7 @@ import Movies from '../Movies/Movies';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import ProtectedRoute from '../ProtectedRoute';
 import { mainApi } from '../../utils/MainApi';
+import useValidation from '../../hooks/useValidation';
 
 function App() {
   const navigate = useNavigate();
@@ -20,13 +21,17 @@ function App() {
   const token = localStorage.getItem('token');
 
   const [loggedIn, setLoggedIn] = useState(!token ? false : true);
+
   const [currentUser, setCurrentUser] = useState({
     name: '',
     email: '',
   })
+
   const [savedMovies, setSavedMovies] = useState(
     JSON.parse(localStorage.getItem('searchFilteredFilms')) || []
   );
+
+  const [requestExecuting, setRequestExecuting] = useState(false);
   const [hasError, setHasError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -55,7 +60,7 @@ function App() {
   }, [token]);
 
   useEffect(() => {
-    if(loggedIn) {
+    if(loggedIn && location.pathname === '/saved-movies') {
       mainApi.getSavedMovies()
         .then(res => res.map(item => ({
           country: item.country,
@@ -75,18 +80,96 @@ function App() {
           setSavedMovies(res);
           localStorage.setItem("ownSavedMovies", JSON.stringify(res));
         })
-        .catch(err => `Error: ${err}`);
+        .catch(err => {
+          console.log(`Error: ${err}`);
+          if (Number(err) === 404) {
+            setHasError(true);
+            setErrorMessage('У вас нет сохраненных фильмов');
+          } else {
+            setHasError(true);
+            setErrorMessage('Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз.');
+          
+          }
+        });
     }
-  }, [loggedIn]);
+  }, [loggedIn, location.pathname]);
 
   function handleLoginState() {
     setLoggedIn(true);
   };
 
+  const { values, setValues, errors, isFormValid, handleChange } = useValidation();
+
+  function handleLoginFormSubmit(event) {
+    event.preventDefault();
+    setRequestExecuting(true);
+    setHasError(false);
+    setErrorMessage('');
+
+    if (!values.email || !values.password) {
+      return;
+    }
+
+    const { email, password } = values;
+    
+    mainApi.authorise({ email, password })
+      .then((res) => {
+        if(res.token) {
+          localStorage.setItem('token', res.token);
+          setValues({
+            email: '',
+            password: '',
+          });
+          handleLoginState();
+          navigate('/movies', {replace: true});
+        } else {
+          return;
+        };
+      })
+      .catch((err) => {
+        console.log(`Ошибка: ${err}`);
+        setHasError(true);
+        if(Number(err) === 401) {
+          setErrorMessage('Вы ввели неправильный логин или пароль.');
+        } else if(Number(err) === 400) {
+          setErrorMessage('Данные вводятся некорректно.');
+        } else {
+          setErrorMessage('При авторизации произошла ошибка.');
+        }
+      })
+      .finally(() => {setRequestExecuting(false)});
+  }
+
+  function handleRegFormSubmit(event) {
+    event.preventDefault();
+    setRequestExecuting(true);
+    setHasError(false);
+    setErrorMessage('');
+
+    const { name, email, password } = values;
+    mainApi.register({ name, email, password })
+      .then((res) => {
+        handleLoginFormSubmit(event);
+      })
+      .catch((err) => {
+        console.log(`Ошибка: ${err}`);
+        setHasError(true);
+        if(Number(err) === 409) {
+          setErrorMessage('Пользователь с таким e-mail уже существует.');
+        }  else if(Number(err) === 400) {
+          setErrorMessage('Данные вводятся некорректно.');
+        } else {
+          setErrorMessage('При регистрации произошла ошибка.');
+        }
+      })
+      .finally(() => setRequestExecuting(false));
+  }
+
   function handleLogOutState() {
     localStorage.removeItem('queryValue');
     localStorage.removeItem('shortsToggleSwitch');
-    localStorage.removeItem('filteredFilms');
+    localStorage.removeItem('allFilms');
+    localStorage.removeItem('renderedFilms');
     localStorage.removeItem('ownSavedMovies');
     localStorage.removeItem('token');
     setLoggedIn(false);
@@ -99,7 +182,7 @@ function App() {
           setSavedMovies([...savedMovies, data]);
           setIsAdded(true);
         })
-        .catch((err) => console.log(err));
+        .catch((err) => console.log(`Error: ${err}`));
   };
 
   function handleFilmUnsave(movie, setIsAdded) {
@@ -108,7 +191,7 @@ function App() {
         setSavedMovies((state) => state.filter(m => m._id !== movie._id));
         setIsAdded(false);
       })
-      .catch(err => console.log(`Error: ${err}`))
+      .catch(err => console.log(`Error: ${err}`));
   };
 
   return (
@@ -122,19 +205,28 @@ function App() {
                 handleFilmSave={handleFilmSave}
                 savedMovies={savedMovies}
                 handleFilmUnsave={handleFilmUnsave}
+                hasError={hasError}
+                setHasError={setHasError}
+                errorMessage={errorMessage}
+                setErrorMessage={setErrorMessage}
               />} />
               <Route path="/saved-movies" element={<SavedMovies
                 savedMovies={savedMovies}
                 handleFilmUnsave={handleFilmUnsave}
+                hasError={hasError}
+                setHasError={setHasError}
+                errorMessage={errorMessage}
+                setErrorMessage={setErrorMessage}
               />} />     
               <Route path="/profile" element={<Profile
-                user={currentUser}
                 setCurrentUser={setCurrentUser}
                 handleLogout={handleLogOutState}
                 hasError={hasError}
                 setHasError={setHasError}
                 errorMessage={errorMessage}
                 setErrorMessage={setErrorMessage}
+                requestExecuting={requestExecuting}
+                setRequestExecuting={setRequestExecuting}
               />} />
             </Route>
           </Route>
@@ -144,14 +236,25 @@ function App() {
               setHasError={setHasError}
               errorMessage={errorMessage}
               setErrorMessage={setErrorMessage}
+              requestExecuting={requestExecuting}
+              handleRegFormSubmit={handleRegFormSubmit}
+              values={values}
+              errors={errors}
+              isFormValid={isFormValid}
+              handleChange={handleChange}
             /> : <Navigate to="/movies" replace />} />
           <Route path="/sign-in" element={!loggedIn
             ? <Login
-            handleLoginState={handleLoginState}
             hasError={hasError}
             setHasError={setHasError}
             errorMessage={errorMessage}
             setErrorMessage={setErrorMessage}
+            requestExecuting={requestExecuting}
+            handleLoginFormSubmit={handleLoginFormSubmit}
+            values={values}
+            errors={errors}
+            isFormValid={isFormValid}
+            handleChange={handleChange}
             />
             : <Navigate to="/movies" replace />} />
           <Route path="*" element={<NotFound />} />

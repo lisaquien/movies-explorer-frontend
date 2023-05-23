@@ -1,41 +1,28 @@
-import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import './Register.css';
 import Logo from '../Logo/Logo';
 import FormInput from '../FormInput/FormInput';
 import FormButton from '../FormButton/FormButton';
-import { mainApi } from '../../utils/MainApi';
-import useValidation from '../../hooks/useValidation';
 
 function Register(props) {
-  const { hasError, setHasError, errorMessage, setErrorMessage } = props;
+  const {
+    hasError,
+    setHasError,
+    errorMessage,
+    setErrorMessage,
+    requestExecuting,
+    handleRegFormSubmit,
+    values,
+    errors,
+    isFormValid,
+    handleChange,
+  } = props;
 
-  const navigate = useNavigate();
-
-  const { values, errors, isFormValid, handleChange } = useValidation();
-
-  function handleRegFormSubmit(event) {
-    event.preventDefault();
+  useEffect(() => {
     setHasError(false);
     setErrorMessage('');
-
-    const { name, email, password } = values;
-    mainApi.register({ name, email, password })
-      .then((res) => {
-        navigate('/movies', {replace: true});
-      })
-      .catch((err) => {
-        console.log(`Ошибка: ${err}`);
-        setHasError(true);
-        if(Number(err) === 409) {
-          setErrorMessage('Пользователь с таким e-mail уже существует.');
-        }  else if(Number(err) === 400) {
-          setErrorMessage('Данные вводятся некорректно.');
-        } else {
-          setErrorMessage('При регистрации произошла ошибка.');
-        }
-      });
-  }
+  }, [])
 
   return(
     <div className="register">
@@ -82,10 +69,11 @@ function Register(props) {
             />
           <FormButton
             componentName="register"
-            buttonText="Зарегистрироваться"
+            buttonText={requestExecuting ? "Регистрация..." : "Зарегистрироваться"}
             isFormValid={isFormValid}
             hasError={hasError}
             errorMessage={errorMessage}
+            requestExecuting={requestExecuting}
           />            
         </form>
         <p className="register__caption">Уже зарегистрированы? <Link to="/sign-in" className="register__link">Войти</Link></p>

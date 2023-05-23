@@ -25,6 +25,20 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  position: relative;
+}
+
+.profile__link-message {
+  position: absolute;
+  bottom: 74px;
+  width: 100%;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  color: #4bb543;
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 1.2;
 }
   
 .profile__link {

@@ -17,6 +17,7 @@ function Input(props) {
     onChange,
     value,
     error,
+    pattern,
   } = props;
 
   return(
@@ -34,6 +35,7 @@ function Input(props) {
           required={required}
           disabled={disabled}
           autoFocus={autoFocus}
+          pattern={pattern}
         />
         <span className={`${id}-error form__input-error ${error ? 'form__input-error_active' : null}`}></span>
       </label>

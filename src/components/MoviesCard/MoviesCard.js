@@ -53,7 +53,6 @@ function MoviesCard(props) {
     handleFilmUnsave(savedMovieObj, setIsAdded);
   };
 
-
   return(
     <li className="film-card">
       <div className="film-card__header">
@@ -76,9 +75,11 @@ function MoviesCard(props) {
           </button> }
         </div>
       </div>
-      <div className="film-card__image-container">
-        <img className="film-card__image" src={card.image} alt="постер к фильму" />
-      </div>
+      <a className="film-card-link" href={card.trailerLink} rel="noreferrer" target="_blank">
+        <div className="film-card__image-container">
+          <img className="film-card__image" src={card.image} alt="постер к фильму" />
+        </div>
+      </a>
     </li>
   );
 }

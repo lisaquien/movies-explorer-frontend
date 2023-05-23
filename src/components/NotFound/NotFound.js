@@ -2,6 +2,8 @@ import './NotFound.css';
 import { Link } from 'react-router-dom';
 
 function NotFound() {
+  console.log('fired');
+
   return(
     <div className="not-found">
       <div className="not-found__container">

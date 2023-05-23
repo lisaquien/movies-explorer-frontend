@@ -6,6 +6,13 @@
   width: 100%;
   overflow: hidden;
 }
+
+.film-card-link {
+  text-decoration: none;
+  color: #000;
+  margin: 0;
+  padding: 0;
+}
   
 .film-card__header {
   margin: 0;
