@@ -49,7 +49,7 @@ function Profile(props) {
         if(Number(err) === 409) {
           setErrorMessage('Пользователь с таким email уже существует.')
         } else {
-          setErrorMessage('При обновлении профиля произошла ошибка. Токен не передан или передан не в том формате.');
+          setErrorMessage('При обновлении профиля произошла ошибка.');
         }
       })
       .finally(() => setRequestExecuting(false));

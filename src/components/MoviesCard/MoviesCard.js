@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import './MoviesCard.css';
+import { setMovieHours, setMovieMinutes } from '../../utils/constants';
 
 function MoviesCard(props) {
   const { card, handleFilmSave, savedMovies, handleFilmUnsave } = props;
@@ -16,14 +17,6 @@ function MoviesCard(props) {
   const moviesPageDefaultIcon = location.pathname === "/movies";
   const savedMoviesPageDefaultIcon = location.pathname === "/saved-movies";
   const likedCardIcon = isAdded && "film-card__button_type_saved";
-
-  function setHours(value) {
-    return Math.floor(value / 60);
-  }
-
-  function setMinutes(value) {
-    return value % 60;
-  }
 
   const allMovieObj = {
     country: card.country,
@@ -58,7 +51,7 @@ function MoviesCard(props) {
       <div className="film-card__header">
         <div>
           <p className="film-card__name">{card.nameRU}</p>
-          <p className="film-card__duration">{setHours(card.duration)}ч {setMinutes(card.duration)}м</p>
+          <p className="film-card__duration">{setMovieHours(card.duration)}ч {setMovieMinutes(card.duration)}м</p>
         </div>
         <div className="film-card__button-container">
           { moviesPageDefaultIcon && <button
