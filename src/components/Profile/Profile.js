@@ -34,6 +34,8 @@ function Profile(props) {
 
   function onProfileUpdateFormSubmit(event) {
     event.preventDefault();
+    setHasError(false);
+    setErrorMessage('');
     setRequestExecuting(true);
     mainApi.updateMyInfo(values)
       .then((res) => {
@@ -69,7 +71,7 @@ function Profile(props) {
                 name="name"
                 id="profile-name"
                 onChange={handleChange}
-                value={values.name || currentUser.name}
+                value={values.name || "" || currentUser.name}
                 error={errors.name || ""}
                 minLength="2"
                 maxLength="30"
@@ -84,7 +86,7 @@ function Profile(props) {
                 name="email"
                 id="profile-email"
                 onChange={handleChange}
-                value={values.email || currentUser.email}
+                value={values.email || "" || currentUser.email}
                 error={errors.email || ""}
                 disabled={!inputsEnabled && "disabled"}
               /> 
@@ -98,6 +100,8 @@ function Profile(props) {
                   hasError={hasError}
                   errorMessage={errorMessage}
                   requestExecuting={requestExecuting}
+                  unchangedData={values.name === currentUser.name && values.email === currentUser.email}
+                  emptyData={values === undefined || values === null}
                 />
               :
                 <>

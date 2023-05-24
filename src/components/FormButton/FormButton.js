@@ -10,6 +10,7 @@ function FormButton(props) {
     hasError,
     errorMessage,
     requestExecuting,
+    unchangedData,
   } = props;
 
   return(
@@ -18,7 +19,7 @@ function FormButton(props) {
       <button
         className={
           `form__button form__button_type_${componentName}
-          ${!isFormValid || requestExecuting ? 'form__button_disabled' : null}`}
+          ${!isFormValid || unchangedData || requestExecuting ? 'form__button_disabled' : null}`}
         type="submit"
       >{buttonText}</button>
     </div>
