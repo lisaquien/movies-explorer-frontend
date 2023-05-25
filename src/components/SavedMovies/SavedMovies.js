@@ -7,10 +7,10 @@ function SavedMovies(props) {
   const {savedMovies,
     handleFilmSave,
     handleFilmUnsave,
-    hasError,
-    setHasError,
-    errorMessage,
-    setErrorMessage,
+    hasFilmResultError,
+    setHasFilmResultError,
+    filmResultErrorMessage,
+    setFilmResultErrorMessage,
   } = props;
 
   const [queryValue, setQueryValue] = useState('');
@@ -38,30 +38,30 @@ function SavedMovies(props) {
   }
 
   useEffect(() => {
-    setHasError(false);
-    setErrorMessage('');
+    setHasFilmResultError(false);
+    setFilmResultErrorMessage('');
     
     const queryFilteredFilms = filterByQuery(savedMovies, queryValue);
     const shortsToggleFilteredFilms = filterByDuration(queryFilteredFilms);
 
     shortsToggleSwitch ? setSavedFilmsFiltered(shortsToggleFilteredFilms) : setSavedFilmsFiltered(queryFilteredFilms);
-  }, [shortsToggleSwitch, savedMovies, queryValue]);
+  }, [setHasFilmResultError, setFilmResultErrorMessage, savedMovies, queryValue, shortsToggleSwitch]);
 
   function handleSearch() {
-    setHasError(false);
-    setErrorMessage('');
+    setHasFilmResultError(false);
+    setFilmResultErrorMessage('');
 
     if (!queryValue) {
-      setHasError(true);
-      setErrorMessage('Нужно ввести ключевое слово');
+      setHasFilmResultError(true);
+      setFilmResultErrorMessage('Нужно ввести ключевое слово');
       return;
     }
 
     const queryFilteredFilms = filterByQuery(savedMovies, queryValue);
 
     if(!queryFilteredFilms.length) {
-      setHasError(true);
-      setErrorMessage('Ничего не найдено');
+      setHasFilmResultError(true);
+      setFilmResultErrorMessage('Ничего не найдено');
       return;
     }
 
@@ -79,8 +79,8 @@ function SavedMovies(props) {
         onToggleChange={handleShortsToggleSwitchState}
         onSubmit={handleSearch}
         />
-      { ( hasError && <p className="all-movies__message">
-            <span className="all-movies__message-none">{errorMessage}</span>
+      { ( hasFilmResultError && <p className="all-movies__message">
+            <span className="all-movies__message-none">{filmResultErrorMessage}</span>
           </p> ) || ( savedFilmsFiltered.length && <>
                       <MoviesCardList
                         cards={savedFilmsFiltered}

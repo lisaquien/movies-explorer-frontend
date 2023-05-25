@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect, useCallback } from "react";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 import { useLocation } from "react-router-dom";
 import { emailRegExp } from "../utils/regExp";
@@ -7,6 +7,7 @@ function useValidation() {
   const [values, setValues] = useState({});
   const [errors, setErrors] = useState({});
   const [isValueValid, setIsValueValid] = useState(false);
+  const [validityValues, setValidityValues] = useState({});
   const [isFormValid, setIsFormValid] = useState(false);
 
   const currentUser = useContext(CurrentUserContext);
@@ -18,19 +19,32 @@ function useValidation() {
         setIsValueValid(false);
         setErrors({
           ...errors,
-          [name]: 'Некорректный адрес электронной почты'});
-          nextSibling.textContent = 'Некорректный адрес электронной почты';
+          email: 'Некорректный адрес электронной почты'});
+        nextSibling.textContent = 'Некорректный адрес электронной почты';
+        setValidityValues({
+          ...validityValues,
+          email: false,
+        })
       } else {
         setIsValueValid(true);
         setErrors({
           ...errors,
-          [name]: '',
+          email: '',
         });
+        setValidityValues({
+          ...validityValues,
+          email: true,
+        })
       };
     };
   }
 
-  function checkValidity(name, validity, validationMessage, nextSibling) {
+  function checkInputValueValidity(name, validity, validationMessage, nextSibling) {
+    setValidityValues({
+      ...validityValues,
+      [name]: validity.valid,
+    })
+
     if (!validity.valid) {
       setIsValueValid(false);
       setErrors({
@@ -50,6 +64,7 @@ function useValidation() {
 
   function handleChange(event) {
     const { name, value, validity, validationMessage, nextSibling } = event.target;
+
     const form = event.target.closest('.form');
 
     setValues({
@@ -57,17 +72,27 @@ function useValidation() {
       [name]: value,
     });
 
-    checkValidity(name, validity, validationMessage, nextSibling);
+    checkInputValueValidity(name, validity, validationMessage, nextSibling);
 
     emailFieldValidation(name, value, nextSibling);
 
     if(location.pathname === '/profile' && value === currentUser[name]) {
       setIsFormValid(false);
       return;
-    }
-    
-    setIsFormValid(form.checkValidity());
+    };
+
+    isValueValid ? setIsFormValid(form.checkValidity()) : setIsFormValid(false);
   }
+
+  function resetForm(newValues = {}, newErrors = {}, newIsValid = false) {
+      setValues(newValues);
+      setErrors(newErrors);
+      setIsValueValid(newIsValid);
+  };
+
+  useEffect(() => {
+    !isValueValid ? setIsFormValid(false) : setIsFormValid(document.querySelector('.form').checkValidity());
+  }, [isValueValid]);
 
   return {
     values,
@@ -79,6 +104,7 @@ function useValidation() {
     isFormValid,
     setIsFormValid,
     handleChange,
+    resetForm,
   }
 }
 

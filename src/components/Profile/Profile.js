@@ -101,7 +101,6 @@ function Profile(props) {
                   errorMessage={errorMessage}
                   requestExecuting={requestExecuting}
                   unchangedData={values.name === currentUser.name && values.email === currentUser.email}
-                  emptyData={values === undefined || values === null}
                 />
               :
                 <>

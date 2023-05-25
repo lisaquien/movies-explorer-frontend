@@ -12,16 +12,17 @@ import {
   CARDS_LOADED_MIN,
   CARDS_PER_LOAD_MAX,
   CARDS_PER_LOAD_MIN,
+  SHORT_FILMS_DURATION,
  } from '../../utils/constants';
 
 function Movies(props) {
   const { handleFilmSave,
     savedMovies,
     handleFilmUnsave,
-    hasError,
-    setHasError,
-    errorMessage,
-    setErrorMessage,
+    hasFilmResultError,
+    setHasFilmResultError,
+    filmResultErrorMessage,
+    setFilmResultErrorMessage,
   } = props;
 
   const windowWidth = document.documentElement.clientWidth;
@@ -88,7 +89,7 @@ function Movies(props) {
   }
 
   function filterByDuration(films) {
-    return films.filter(film => Number(film.duration) <= 40);
+    return films.filter(film => Number(film.duration) <= SHORT_FILMS_DURATION);
   }
 
   function filterByQuery(films, queryValue) {
@@ -117,58 +118,76 @@ function Movies(props) {
     shortsToggleSwitch ? setRenderedFilms(shortsToggleFilteredFilms) : setRenderedFilms(queryFilteredFilms);
 
     localStorage.setItem('queryValue', queryValue);
-  }, [shortsToggleSwitch, allFilms, queryValue]);
+  }, [filmResultErrorMessage, setHasFilmResultError, setFilmResultErrorMessage, allFilms, queryValue, firstRequestSent, shortsToggleSwitch]);
 
   const handleSearch = useCallback(() => {
-    setHasError(false);
-    setErrorMessage('');
+    setHasFilmResultError(false);
+    setFilmResultErrorMessage('');
     setIsLoading(true);
 
     if (!queryValue) {
-      setHasError(true);
-      setErrorMessage('Нужно ввести ключевое слово');
+      setFirstRequestSent(true);
+      setHasFilmResultError(true);
+      setFilmResultErrorMessage('Нужно ввести ключевое слово');
       setIsLoading(false);
       return;
     }
 
-    moviesApi.getAllBeatMovies()
-      .then(res => res.map(item => ({
-          country: item.country,
-          description: item.description,
-          director: item.director,
-          duration: item.duration,
-          id: item.id,
-          image: `https://api.nomoreparties.co${item.image.url}`,
-          nameRU: item.nameRU,
-          nameEN: item.nameEN,
-          thumbnail: `https://api.nomoreparties.co${item.image.formats.thumbnail.url}`,
-          trailerLink: item.trailerLink,
-          year: item.year,
-      })))
-      .then((res) => {
-        const queryFilteredFilms = filterByQuery(res, queryValue);
+    if(!allFilms.length) {
+      moviesApi.getAllBeatMovies()
+        .then(res => res.map(item => ({
+            country: item.country,
+            description: item.description,
+            director: item.director,
+            duration: item.duration,
+            id: item.id,
+            image: `https://api.nomoreparties.co${item.image.url}`,
+            nameRU: item.nameRU,
+            nameEN: item.nameEN,
+            thumbnail: `https://api.nomoreparties.co${item.image.formats.thumbnail.url}`,
+            trailerLink: item.trailerLink,
+            year: item.year,
+        })))
+        .then((res) => {
+          const queryFilteredFilms = filterByQuery(res, queryValue);
 
-        if(!queryFilteredFilms.length) {
-          setFirstRequestSent(true);
-          setHasError(true);
-          setErrorMessage('Ничего не найдено');
-          return;
-        }
+          if(!queryFilteredFilms.length) {
+            setFirstRequestSent(true);
+            setHasFilmResultError(true);
+            setFilmResultErrorMessage('Ничего не найдено');
+            return;
+          }
 
-        const shortsToggleFilteredFilms = filterByDuration(queryFilteredFilms);
+          const shortsToggleFilteredFilms = filterByDuration(queryFilteredFilms);
 
-        setAllFilms(res);
+          setAllFilms(res);
 
-        shortsToggleSwitch ? setRenderedFilms(shortsToggleFilteredFilms) : setRenderedFilms(queryFilteredFilms);
-      })
-      .catch((err) => {
-        console.log(`Ошибка: ${err}.`)
-        setHasError(true);
-        setErrorMessage('Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз.');
-      })
-      .finally(() => setIsLoading(false));
-    
-  }, [queryValue]);
+          shortsToggleSwitch ? setRenderedFilms(shortsToggleFilteredFilms) : setRenderedFilms(queryFilteredFilms);
+        })
+        .catch((err) => {
+          console.log(`Ошибка: ${err}.`)
+          setHasFilmResultError(true);
+          setFilmResultErrorMessage('Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз.');
+        })
+        .finally(() => setIsLoading(false));
+    } else {
+      setFirstRequestSent(true);
+
+      const queryFilteredFilms = filterByQuery(allFilms, queryValue);
+
+      if(!queryFilteredFilms.length) {
+        setFirstRequestSent(true);
+        setHasFilmResultError(true);
+        setFilmResultErrorMessage('Ничего не найдено');
+      };
+
+      const shortsToggleFilteredFilms = filterByDuration(queryFilteredFilms);
+
+      shortsToggleSwitch ? setRenderedFilms(shortsToggleFilteredFilms) : setRenderedFilms(queryFilteredFilms);
+
+      setIsLoading(false);
+    }
+  }, [queryValue, shortsToggleSwitch, allFilms, setFilmResultErrorMessage, setHasFilmResultError]);
   
   return(
     <section className="all-movies">
@@ -181,8 +200,8 @@ function Movies(props) {
         />
       { isLoading
         ? <Preloader />
-        : ( (hasError && firstRequestSent) && <p className="all-movies__message">
-        <span className="all-movies__message-none">{errorMessage}</span>
+        : ( (hasFilmResultError && firstRequestSent) && <p className="all-movies__message">
+        <span className="all-movies__message-none">{filmResultErrorMessage}</span>
       </p> ) || ( renderedFilms.length && <>
                   <MoviesCardList
                     cards={renderedFilms.slice(0, filmsPerLoad)}

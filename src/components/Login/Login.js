@@ -17,12 +17,17 @@ function Login(props) {
     errors,
     isFormValid,
     handleChange,
+    resetForm,
   } = props;
 
   useEffect(() => {
     setHasError(false);
     setErrorMessage('');
-  }, [])
+    
+    return() => {
+      resetForm();
+    }
+  }, []);
 
   return(
     <div className="login">

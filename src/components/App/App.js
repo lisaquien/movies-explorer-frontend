@@ -35,9 +35,18 @@ function App() {
   const [hasError, setHasError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
+  const [hasFilmResultError, setHasFilmResultError] = useState(false);
+  const [filmResultErrorMessage, setFilmResultErrorMessage] = useState('');
+
+  const { values, setValues, errors, isFormValid, handleChange, resetForm } = useValidation();
+
   useEffect(() => {
     if(!token) {
-      if(location.pathname === '/movies' || location.pathname === '/saved-movies' || location.pathname === '/profile') {
+      if(
+        location.pathname === '/movies'
+        || location.pathname === '/saved-movies'
+        || location.pathname === '/profile'
+      ) {
         navigate('/');
         return;
       }
@@ -97,8 +106,6 @@ function App() {
   function handleLoginState() {
     setLoggedIn(true);
   };
-
-  const { values, setValues, errors, isFormValid, handleChange } = useValidation();
 
   function handleLoginFormSubmit(event) {
     event.preventDefault();
@@ -205,18 +212,18 @@ function App() {
                 handleFilmSave={handleFilmSave}
                 savedMovies={savedMovies}
                 handleFilmUnsave={handleFilmUnsave}
-                hasError={hasError}
-                setHasError={setHasError}
-                errorMessage={errorMessage}
-                setErrorMessage={setErrorMessage}
+                hasFilmResultError={hasFilmResultError}
+                setHasFilmResultError={setHasFilmResultError}
+                filmResultErrorMessage={filmResultErrorMessage}
+                setFilmResultErrorMessage={setFilmResultErrorMessage}
               />} />
               <Route path="/saved-movies" element={<SavedMovies
                 savedMovies={savedMovies}
                 handleFilmUnsave={handleFilmUnsave}
-                hasError={hasError}
-                setHasError={setHasError}
-                errorMessage={errorMessage}
-                setErrorMessage={setErrorMessage}
+                hasFilmResultError={hasFilmResultError}
+                setHasFilmResultError={setHasFilmResultError}
+                filmResultErrorMessage={filmResultErrorMessage}
+                setFilmResultErrorMessage={setFilmResultErrorMessage}
               />} />     
               <Route path="/profile" element={<Profile
                 setCurrentUser={setCurrentUser}
@@ -227,6 +234,11 @@ function App() {
                 setErrorMessage={setErrorMessage}
                 requestExecuting={requestExecuting}
                 setRequestExecuting={setRequestExecuting}
+                values={values}
+                setValues={setValues}
+                errors={errors}
+                isFormValid={isFormValid}
+                handleChange={handleChange}
               />} />
             </Route>
           </Route>
@@ -255,6 +267,7 @@ function App() {
             errors={errors}
             isFormValid={isFormValid}
             handleChange={handleChange}
+            resetForm={resetForm}
             />
             : <Navigate to="/movies" replace />} />
           <Route path="*" element={<NotFound />} />
