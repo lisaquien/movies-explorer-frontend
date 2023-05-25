@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './SavedMovies.css';
 import SearchForm from '../SearchForm/SearchForm';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
+import {SHORT_FILMS_DURATION } from '../../utils/constants';
 
 function SavedMovies(props) {
   const {savedMovies,
@@ -27,7 +28,7 @@ function SavedMovies(props) {
   }
 
   function filterByDuration(films) {
-    return films.filter(film => Number(film.duration) <= 40);
+    return films.filter(film => Number(film.duration) <= SHORT_FILMS_DURATION);
   }
 
   function filterByQuery(films, queryValue) {
