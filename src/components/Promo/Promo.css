@@ -1,0 +1,131 @@
+.promo {
+  margin: 0;
+  padding: 75px 70px;
+  background-color: #dddee3;
+  position: relative;
+}
+
+.promo__logo {
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  top: 75px;
+  right: 70px;
+}
+  
+.promo__heading {
+  margin: 0;
+  padding: 0;
+  max-width: 640px;
+  font-size: 50px;
+  line-height: 1.2;
+  font-weight: 400;
+}
+  
+.promo__subheading {
+  margin: 36px 0 146px;
+  padding: 0;
+  max-width: 310px;
+  font-size: 16px;
+  line-height: 1.2;
+  font-weight: 400;
+  opacity: 0.5;
+}
+  
+.promo__button {
+  margin: 0;
+  padding: 0;
+  width: 129px;
+  height: 36px;
+  background-color: transparent;
+  border-radius: 3px;
+  border: 1px solid #000000;
+  text-align: center;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 1.2;
+  color: #000000;
+}
+  
+.promo__button:hover {
+  cursor: pointer;
+  opacity: 0.8;
+  border: 1px solid rgba(0, 0, 0, .8);
+}
+
+@media (max-width: 1115px) {
+  .promo__heading {
+    max-width: 510px;
+    font-size: 40px;
+  }
+}
+
+@media (max-width: 970px) {
+  .promo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 140px 30px 76px;
+  }
+
+  .promo__logo {
+    position: static;
+    margin-bottom: 48px;
+  }
+
+  .promo__heading {
+    max-width: 680px;
+    text-align: center;
+  }
+
+  .promo__subheading {
+    margin: 22px 0 92px;
+    max-width: 260px;
+    font-size: 13px;
+    text-align: center;
+  }
+}
+
+@media (max-width: 640px) {
+  .promo {
+    padding: 70px 14px 30px;
+  }
+
+  .promo__logo {
+    margin-bottom: 44px;
+    width: 260px;
+    height: 254px;
+  }
+
+  .promo__heading {
+    max-width: 470px;
+    font-size: 35px;
+  }
+
+  .promo__subheading {
+    margin: 24px 0 80px;
+  }
+}
+
+@media (max-width: 550px) {
+  .promo__heading {
+    max-width: 400px;
+    font-size: 30px;
+  }
+}
+
+@media (max-width: 455px) {
+  .promo__logo {
+    width: 210px;
+    height: 206px;
+  }
+  .promo__heading {
+    max-width: 350px;
+  }
+}
+
+@media (max-width: 335px) {
+  .promo__heading {
+    font-size: 28px;
+  }
+}

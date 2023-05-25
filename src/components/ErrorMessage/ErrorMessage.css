@@ -1,0 +1,12 @@
+.error-message__text {
+  position: absolute;
+  bottom: 74px;
+  width: 100%;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  color: #ff004c;
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 1.2;
+}

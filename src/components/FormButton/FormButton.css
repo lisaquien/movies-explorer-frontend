@@ -1,0 +1,61 @@
+.form-button__container {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  position: relative;
+}
+
+.form__button {
+  padding: 0;
+  height: 45px;
+  border-radius: 3px;
+  font-style: inherit;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 1.2;
+  border: 0;
+  background-color: #3456f3;
+  color: #fff;
+}
+
+.form__button_type_register {
+  margin: 152px 0 16px;
+}
+  
+.form__button_type_login {
+  margin: 221px 0 16px;
+}
+  
+.form__button:hover {
+  cursor: pointer;
+  opacity: 0.8;
+}
+  
+.form__button_disabled {
+  background-color: #f8f8f8;
+  color: #c2c2c2;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+@media (max-height: 672px) {
+  .form__button_type_register {
+    margin-top: calc(100vh - 520px);
+    margin-bottom: 14px;
+  }
+
+  .form__button_type_login {
+    margin-top: calc(100vh - 451px);
+    margin-bottom: 14px;
+  }
+}
+
+@media ((max-width: 320px) and (max-height: 780px)) {
+  .form__button_type_register {
+    margin-top: 230px;
+  }
+
+  .form__button_type_login {
+    margin-top: 309px;
+  }
+}

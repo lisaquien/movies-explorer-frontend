@@ -1,0 +1,145 @@
+.profile {
+  margin: 0;
+  padding: 74px calc((100vw - 410px) / 2) 70px;
+}
+  
+.profile__container {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+  
+.profile__greeting {
+  margin: 0 0 123px;
+  padding: 0;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 1.2;
+}
+  
+.profile__ctrl-panel {
+  margin: 220px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.profile__link-message {
+  position: absolute;
+  bottom: 74px;
+  width: 100%;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  color: #4bb543;
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 1.2;
+}
+  
+.profile__link {
+  margin: 0 0 16px;
+  padding: 0;
+  text-decoration: none;
+  color: #000;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 1.2;
+}
+  
+.profile__link:last-of-type {
+  margin-bottom: 0;
+  color: #ee3465;
+}
+  
+.profile__link:hover {
+  cursor: pointer;
+  opacity: 0.7;
+}
+  
+.profile__info {
+  width: 100%;
+}
+  
+.profile__name {
+  margin: 0;
+  padding: 0 0 16px;
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+}
+  
+.profile__email {
+  margin: 0;
+  padding: 16px 0 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+@media (max-width: 768px) {
+  .profile {
+    padding-top: calc(100vh - (74px + 445px + 269px));
+    padding-bottom: calc(100vh - (74px + 445px + 236px));
+  }
+
+  .profile__greeting {
+    margin-bottom: 96px;
+  }
+  .profile__ctrl-panel {
+    margin-top: 210px;
+  }
+  .profile__link {
+    margin-bottom: 16px; 
+  }
+}
+
+@media (max-width: 470px) {
+  .profile {
+    padding-left: 30px;
+    padding-right: 30px;
+  }
+}
+
+@media (max-width: 320px) {
+  .profile__link {
+    font-size: 12px;
+  }
+}
+
+@media (max-height: 858px) {
+  .profile {
+    padding-top: 70px;
+  }
+}
+
+@media (height: 700px) {
+  .profile {
+    padding-top: 74px;
+  }
+}
+
+@media (max-width: 768px) {
+  .profile__greeting {
+    margin-bottom: 80px;
+  };
+}
+
+@media (max-height: 795px) {
+  .profile {
+    padding-bottom: 40px;
+  }
+
+  .profile__greeting {
+    margin-bottom: 80px;
+  }
+}
+
+@media (max-height: 610px) {
+  .profile__ctrl-panel {
+    margin-top: calc(100vh - 390px);
+  }
+}
